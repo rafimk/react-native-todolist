@@ -1,0 +1,22 @@
+https://blog.shahednasser.com/react-native-tutorial-create-your-first-app/
+
+ASP.NET Core Identity authentication
+
+public class ApplicationClaimsIdentityFactory: Microsoft.AspNetCore.Identity.UserClaimsPrincipalFactory <ApplicationUser>
+{
+    UserManager<ApplicationUser> _userManager;
+    public ApplicationClaimsIdentityFactory(UserManager<ApplicationUser> userManager, 
+        IOptions<IdentityOptions> optionsAccessor):base(userManager, optionsAccessor)
+    {}
+    public async override Task<ClaimsPrincipal> CreateAsync(ApplicationUser user)
+    {
+        var principal = await base.CreateAsync(user);
+        if (user.IsDeveloper)
+        {
+            ((ClaimsIdentity)principal.Identity).AddClaims(new[] {
+                new Claim("IsDeveloper", "true")
+            });
+        }
+        return principal;
+    }
+}
